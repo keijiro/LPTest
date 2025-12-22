@@ -1,0 +1,3 @@
+[submodule "References/PhysicsExamples2D"]
+	path = References/PhysicsExamples2D
+	url = https://github.com/Unity-Technologies/PhysicsExamples2D
