@@ -50,12 +50,14 @@ public class ScoopController : MonoBehaviour, IStageInitializable
         }
 
         CreateMouseBody();
-        CreateMouseJoint();
         CreateRimJoint();
     }
 
     void OnDestroy()
     {
+        if (_mouseJoint.isValid)
+            _mouseJoint.Destroy();
+
         if (_mouseBody.isValid)
             _mouseBody.Destroy();
     }
@@ -69,12 +71,20 @@ public class ScoopController : MonoBehaviour, IStageInitializable
         if (TargetCamera == null || mouse == null)
             return;
 
-        var target = (Vector2)TargetCamera.ScreenToWorldPoint(mouse.position.value);
-        var mouseTransform = _mouseBody.transform;
-        mouseTransform.position = target;
-        _mouseBody.transform = mouseTransform;
-        _mouseBody.linearVelocity = Vector2.zero;
-        _mouseBody.angularVelocity = 0f;
+        if (mouse.leftButton.isPressed)
+        {
+            if (!_mouseJoint.isValid)
+                CreateMouseJoint();
+
+            var target = (Vector2)TargetCamera.ScreenToWorldPoint(mouse.position.value);
+            var mouseTransform = _mouseBody.transform;
+            mouseTransform.position = target;
+            _mouseBody.transform = mouseTransform;
+            _mouseBody.linearVelocity = Vector2.zero;
+            _mouseBody.angularVelocity = 0f;
+        }
+        else if (_mouseJoint.isValid)
+            _mouseJoint.Destroy();
     }
 
     void CreateMouseBody()

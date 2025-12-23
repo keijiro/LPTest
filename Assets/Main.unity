@@ -218,10 +218,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4491d3f6287d4514a9dce8b3313f22b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LowLevelScoop
-  <ScoopSize>k__BackingField: {x: 0.7, y: 0.25}
-  <WallThickness>k__BackingField: 0.04
-  <BackWallHeight>k__BackingField: 0.1
-  <HandleLength>k__BackingField: 0.35
+  <ScoopSize>k__BackingField: {x: 0.2, y: 0.1}
+  <WallThickness>k__BackingField: 0.02
+  <HandleLength>k__BackingField: 0.2
   <SpawnOffset>k__BackingField: {x: 0, y: 0.6}
 --- !u!1 &751942952
 GameObject:
