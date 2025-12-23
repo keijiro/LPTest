@@ -10,12 +10,12 @@ public class Scoop : MonoBehaviour, IStageInitializable
     [field:SerializeField] public float ScoopDensity { get; set; } = 1f;
 
     public PhysicsBody ScoopBody => _scoopBody;
-    public Vector2 TipLocal => new(-ScoopSize.x * 0.5f, 0f);
+    public Vector2 TipLocal => new(-ScoopSize.x * 0.5f, -ScoopSize.y * 0.5f);
     public Vector2 BaseLocal => new(ScoopSize.x * 0.5f, 0f);
     public Vector2 HandleTipLocal => new(ScoopSize.x * 0.5f + HandleLength, 0f);
 
     PhysicsBody _scoopBody;
-    (PolygonGeometry bottom, PolygonGeometry left, PolygonGeometry right, PolygonGeometry handle) _scoopGeometry;
+    (PolygonGeometry bottom, PolygonGeometry right, PolygonGeometry handle) _scoopGeometry;
 
     public void InitializeStage(StageManager stage)
       => CreateScoop();
@@ -43,12 +43,10 @@ public class Scoop : MonoBehaviour, IStageInitializable
         var handleSize = new Vector2(HandleLength, thickness);
 
         var xformBottom = new PhysicsTransform(new Vector2(0f, -half.y + thickness * 0.5f));
-        var xformLeft = new PhysicsTransform(new Vector2(-half.x + thickness * 0.5f, 0f));
         var xformRight = new PhysicsTransform(new Vector2(half.x - thickness * 0.5f, 0f));
         var xformHandle = new PhysicsTransform(new Vector2(half.x + HandleLength * 0.5f, 0f));
 
         _scoopGeometry.bottom = PolygonGeometry.CreateBox(bottomSize, 0f, xformBottom);
-        _scoopGeometry.left = PolygonGeometry.CreateBox(sideSize, 0f, xformLeft);
         _scoopGeometry.right = PolygonGeometry.CreateBox(sideSize, 0f, xformRight);
         _scoopGeometry.handle = PolygonGeometry.CreateBox(handleSize, 0f, xformHandle);
 
@@ -56,7 +54,6 @@ public class Scoop : MonoBehaviour, IStageInitializable
         shapeDef.density = ScoopDensity;
 
         _scoopBody.CreateShape(_scoopGeometry.bottom, shapeDef);
-        _scoopBody.CreateShape(_scoopGeometry.left, shapeDef);
         _scoopBody.CreateShape(_scoopGeometry.right, shapeDef);
         _scoopBody.CreateShape(_scoopGeometry.handle, shapeDef);
     }

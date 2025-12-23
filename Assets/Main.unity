@@ -218,10 +218,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4491d3f6287d4514a9dce8b3313f22b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LowLevelScoop
-  <ScoopSize>k__BackingField: {x: 3, y: 1.5}
-  <WallThickness>k__BackingField: 0.3
-  <HandleLength>k__BackingField: 3
-  <SpawnOffset>k__BackingField: {x: 0, y: 0.6}
+  <ScoopSize>k__BackingField: {x: 2, y: 1}
+  <WallThickness>k__BackingField: 0.2
+  <HandleLength>k__BackingField: 2
+  <SpawnOffset>k__BackingField: {x: 0, y: 6}
   <ScoopDensity>k__BackingField: 1
 --- !u!1 &751942952
 GameObject:
@@ -267,9 +267,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a10f59616b344f27ba461eb38db9f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LowLevelBucket
-  <BucketSize>k__BackingField: {x: 15, y: 15}
+  <BucketSize>k__BackingField: {x: 12, y: 12}
   <WallThickness>k__BackingField: 0.5
-  <BucketOffset>k__BackingField: {x: 0, y: -2}
+  <BucketOffset>k__BackingField: {x: 0, y: -1.5}
 --- !u!1 &767570499
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LowLevelBallFill
   <Bucket>k__BackingField: {fileID: 751942955}
   <BallsPerAxis>k__BackingField: 23
-  <BallRadius>k__BackingField: 0.25
+  <BallRadius>k__BackingField: 0.2
   <BallPadding>k__BackingField: {x: 0.01, y: 0.01}
   <BallDensity>k__BackingField: 1
 --- !u!4 &767570501
@@ -351,9 +351,9 @@ MonoBehaviour:
   <Scoop>k__BackingField: {fileID: 296814360}
   <Bucket>k__BackingField: {fileID: 751942955}
   <TargetCamera>k__BackingField: {fileID: 1411473418}
-  <MouseSpringFrequency>k__BackingField: 2.5
+  <MouseSpringFrequency>k__BackingField: 1
   <MouseSpringDamping>k__BackingField: 1.2
-  <RimSpringFrequency>k__BackingField: 1
+  <RimSpringFrequency>k__BackingField: 0.5
   <RimSpringDamping>k__BackingField: 2
 --- !u!4 &1386073516
 Transform:
@@ -400,7 +400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
@@ -411,11 +411,11 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
-  m_Dithering: 1
+  m_Dithering: 0
   m_ClearDepth: 1
   m_AllowXRRendering: 1
   m_AllowHDROutput: 1
@@ -464,10 +464,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 100
+  far clip plane: 20
   field of view: 20
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 8
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2

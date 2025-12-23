@@ -151,7 +151,7 @@ MonoBehaviour:
     m_Enabled: 1
   m_PhysicsShapeDefinition:
     surfaceMaterial:
-      m_Friction: 0.6
+      m_Friction: 0.8
       m_Bounciness: 0
       m_FrictionMixing: 1
       m_BouncinessMixing: 4

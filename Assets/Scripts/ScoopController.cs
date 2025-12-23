@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.LowLevelPhysics2D;
-
 public class ScoopController : MonoBehaviour, IStageInitializable
 {
     [field:SerializeField] public Scoop Scoop { get; set; }
