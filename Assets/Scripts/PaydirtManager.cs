@@ -4,28 +4,28 @@ using UnityEngine.LowLevelPhysics2D;
 
 public class PaydirtManager : MonoBehaviour, IStageInitializable
 {
-    [field:SerializeField] public float DirtRadius { get; set; } = 0.2f;
-    [field:SerializeField] public float DirtDensity { get; set; } = 1f;
+    [field:SerializeField] public DirtBodyDefinition DirtDefinition { get; set; }
+    [field:SerializeField] public DirtBodyDefinition BombDefinition { get; set; }
+    [field:SerializeField] public DirtBodyDefinition[] GemDefinitions { get; set; }
     [field:SerializeField] public float PourRate { get; set; } = 200;
     [field:SerializeField] public int TargetBodyCount { get; set; } = 900;
+    [field:SerializeField] public int BombsPerDirt { get; set; } = 30;
+    [field:SerializeField] public int GemsPerDirt { get; set; } = 20;
     [field:SerializeField] public Vector2 SpoutCenter { get; set; } = new(0, 12);
     [field:SerializeField] public Vector2 SpoutSize { get; set; } = new(13, 1);
     [field:SerializeField] public float RecycleY { get; set; } = -10;
 
-    CircleGeometry _dirtGeometry;
     readonly List<PhysicsBody> _dirtBodies = new();
     PhysicsBodyDefinition _bodyDefinition;
-    PhysicsShapeDefinition _shapeDefinition;
     float _spawnAccumulator;
+    int _dirtSinceBomb;
+    int _dirtSinceGem;
+    int _gemIndex;
 
     public void InitializeStage(StageManager stage)
     {
         _bodyDefinition = PhysicsBodyDefinition.defaultDefinition;
         _bodyDefinition.type = PhysicsBody.BodyType.Dynamic;
-
-        _shapeDefinition = PhysicsShapeDefinition.defaultDefinition;
-        _shapeDefinition.density = DirtDensity;
-        _dirtGeometry = new CircleGeometry { radius = DirtRadius };
     }
 
     void OnDestroy()
@@ -56,7 +56,7 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
         while (_spawnAccumulator >= 1f && _dirtBodies.Count < TargetBodyCount)
         {
             _spawnAccumulator -= 1f;
-            var body = CreateDirtBody(GetSpoutPosition());
+            var body = CreateDirtBody(GetSpoutPosition(), ChooseDefinition());
             _dirtBodies.Add(body);
         }
     }
@@ -76,12 +76,28 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
         }
     }
 
-    PhysicsBody CreateDirtBody(Vector2 position)
+    PhysicsBody CreateDirtBody(Vector2 position, DirtBodyDefinition definition)
+      => definition.CreateBody(PhysicsWorld.defaultWorld, _bodyDefinition, position);
+
+    DirtBodyDefinition ChooseDefinition()
     {
-        _bodyDefinition.position = position;
-        var body = PhysicsWorld.defaultWorld.CreateBody(_bodyDefinition);
-        body.CreateShape(_dirtGeometry, _shapeDefinition);
-        return body;
+        if (BombsPerDirt > 0 && _dirtSinceBomb >= BombsPerDirt)
+        {
+            _dirtSinceBomb = 0;
+            return BombDefinition;
+        }
+
+        if (GemsPerDirt > 0 && _dirtSinceGem >= GemsPerDirt)
+        {
+            _dirtSinceGem = 0;
+            var definition = GemDefinitions[_gemIndex];
+            _gemIndex = (_gemIndex + 1) % GemDefinitions.Length;
+            return definition;
+        }
+
+        _dirtSinceBomb++;
+        _dirtSinceGem++;
+        return DirtDefinition;
     }
 
     void ResetDirtBody(PhysicsBody body)
@@ -94,14 +110,17 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
     Vector2 GetSpoutPosition()
     {
         var halfSize = new Vector2(Mathf.Max(0f, SpoutSize.x), Mathf.Max(0f, SpoutSize.y)) * 0.5f;
-        var minX = SpoutCenter.x - halfSize.x + DirtRadius;
-        var maxX = SpoutCenter.x + halfSize.x - DirtRadius;
+        var radius = Mathf.Max(DirtDefinition.Radius, BombDefinition.Radius);
+        for (var i = 0; i < GemDefinitions.Length; ++i)
+            radius = Mathf.Max(radius, GemDefinitions[i].Radius);
+        var minX = SpoutCenter.x - halfSize.x + radius;
+        var maxX = SpoutCenter.x + halfSize.x - radius;
         if (minX > maxX)
             minX = maxX = SpoutCenter.x;
         var x = Random.Range(minX, maxX);
 
-        var minY = SpoutCenter.y - halfSize.y + DirtRadius;
-        var maxY = SpoutCenter.y + halfSize.y - DirtRadius;
+        var minY = SpoutCenter.y - halfSize.y + radius;
+        var maxY = SpoutCenter.y + halfSize.y - radius;
         if (minY > maxY)
             minY = maxY = SpoutCenter.y;
         var y = Random.Range(minY, maxY);

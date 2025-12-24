@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 767570501}
   - component: {fileID: 767570500}
   m_Layer: 0
-  m_Name: Filler
+  m_Name: Paydirt Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -299,10 +299,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1890ff84b0d0447388e01c0ef3fda5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LowLevelBallFill
-  <DirtRadius>k__BackingField: 0.2
-  <DirtDensity>k__BackingField: 1
+  <DirtDefinition>k__BackingField: {fileID: 11400000, guid: e2e09bdb979124ddea4eda74b6ac06eb, type: 2}
+  <BombDefinition>k__BackingField: {fileID: 11400000, guid: 1a1a9cc9505f5456bb1fe4a037e78092, type: 2}
+  <GemDefinitions>k__BackingField:
+  - {fileID: 11400000, guid: 0e7b1d499aa5b4b018f748931abdd8de, type: 2}
+  - {fileID: 11400000, guid: d4d7b3261cdb245eebb98245e85b214c, type: 2}
   <PourRate>k__BackingField: 200
   <TargetBodyCount>k__BackingField: 900
+  <BombsPerDirt>k__BackingField: 400
+  <GemsPerDirt>k__BackingField: 200
   <SpoutCenter>k__BackingField: {x: 0, y: 12}
   <SpoutSize>k__BackingField: {x: 13, y: 1}
   <RecycleY>k__BackingField: -10
