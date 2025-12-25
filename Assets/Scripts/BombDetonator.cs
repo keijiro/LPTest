@@ -3,7 +3,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-public class BombDetonationTester : MonoBehaviour
+public class BombDetonator : MonoBehaviour
 {
     [SerializeField] PaydirtManager _paydirtManager = null;
     [field:SerializeField] public float DetonationSpeedThreshold { get; set; } = 1f;

@@ -479,7 +479,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40d688054850d415986f0e6500eb3bf6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BombDetonationTester
+  m_EditorClassIdentifier: Assembly-CSharp::BombDetonator
   _paydirtManager: {fileID: 767570500}
   <DetonationSpeedThreshold>k__BackingField: 10
 --- !u!4 &1079328226
