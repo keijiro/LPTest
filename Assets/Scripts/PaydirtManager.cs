@@ -18,9 +18,12 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
     public IReadOnlyList<PhysicsBody> BombBodies => _bombBodies;
     public IReadOnlyList<PhysicsBody> GemBodies => _gemBodies;
 
-    readonly List<PhysicsBody> _dirtBodies = new();
+    readonly List<PhysicsBody> _allBodies = new();
+    readonly List<PhysicsBody> _poolBodies = new();
+    readonly List<PhysicsBody> _activeBodies = new();
     readonly List<PhysicsBody> _bombBodies = new();
     readonly List<PhysicsBody> _gemBodies = new();
+    readonly Queue<PhysicsBody> _pendingBodies = new();
     PhysicsBodyDefinition _bodyDefinition;
     float _spawnAccumulator;
     int _dirtSinceBomb;
@@ -38,18 +41,23 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
     {
         _bodyDefinition = PhysicsBodyDefinition.defaultDefinition;
         _bodyDefinition.type = PhysicsBody.BodyType.Dynamic;
+        CreatePool();
+        RequestInjection();
     }
 
     void OnDestroy()
     {
-        for (var i = 0; i < _dirtBodies.Count; ++i)
+        for (var i = 0; i < _allBodies.Count; ++i)
         {
-            var body = _dirtBodies[i];
+            var body = _allBodies[i];
             if (body.isValid)
                 body.Destroy();
         }
 
-        _dirtBodies.Clear();
+        _allBodies.Clear();
+        _poolBodies.Clear();
+        _pendingBodies.Clear();
+        _activeBodies.Clear();
         _bombBodies.Clear();
         _gemBodies.Clear();
     }
@@ -62,36 +70,33 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
 
     void SpawnDirtBodies()
     {
-        if (_dirtBodies.Count >= TargetBodyCount)
+        if (_pendingBodies.Count == 0)
             return;
 
         _spawnAccumulator += PourRate * Time.deltaTime;
 
-        while (_spawnAccumulator >= 1f && _dirtBodies.Count < TargetBodyCount)
+        while (_spawnAccumulator >= 1f && _pendingBodies.Count > 0)
         {
             _spawnAccumulator -= 1f;
-            var definition = ChooseDefinition(out var kind);
-            var body = CreateDirtBody(GetSpoutPosition(), definition, kind);
-            _dirtBodies.Add(body);
-            if (kind == PaydirtKind.Bomb)
-                _bombBodies.Add(body);
-            else if (kind == PaydirtKind.Gem)
-                _gemBodies.Add(body);
+            var body = _pendingBodies.Dequeue();
+            ActivateBody(body);
+            _activeBodies.Add(body);
         }
     }
 
     void RecycleDirtBodies()
     {
-        for (var i = 0; i < _dirtBodies.Count; ++i)
+        for (var i = _activeBodies.Count - 1; i >= 0; --i)
         {
-            var body = _dirtBodies[i];
+            var body = _activeBodies[i];
             if (!body.isValid)
                 continue;
 
             if (body.transform.position.y >= RecycleY)
                 continue;
 
-            ResetDirtBody(body);
+            DeactivateBody(body);
+            _activeBodies.RemoveAt(i);
         }
     }
 
@@ -139,11 +144,20 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
         return new PhysicsShape.ContactFilter(categories, contacts, 0);
     }
 
-    void ResetDirtBody(PhysicsBody body)
+    void ActivateBody(PhysicsBody body)
     {
+        body.enabled = true;
         body.SetAndWriteTransform(new PhysicsTransform(GetSpoutPosition()));
         body.linearVelocity = Vector2.zero;
         body.angularVelocity = 0f;
+    }
+
+    void DeactivateBody(PhysicsBody body)
+    {
+        body.linearVelocity = Vector2.zero;
+        body.angularVelocity = 0f;
+        body.enabled = false;
+        _poolBodies.Add(body);
     }
 
     Vector2 GetSpoutPosition()
@@ -165,5 +179,41 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
         var y = Random.Range(minY, maxY);
 
         return new Vector2(x, y);
+    }
+
+    void CreatePool()
+    {
+        _allBodies.Clear();
+        _poolBodies.Clear();
+        _pendingBodies.Clear();
+        _activeBodies.Clear();
+        _bombBodies.Clear();
+        _gemBodies.Clear();
+        _spawnAccumulator = 0f;
+        _dirtSinceBomb = 0;
+        _dirtSinceGem = 0;
+        _gemIndex = 0;
+
+        for (var i = 0; i < TargetBodyCount; ++i)
+        {
+            var definition = ChooseDefinition(out var kind);
+            var body = CreateDirtBody(GetSpoutPosition(), definition, kind);
+            body.enabled = false;
+
+            _allBodies.Add(body);
+            _poolBodies.Add(body);
+            if (kind == PaydirtKind.Bomb)
+                _bombBodies.Add(body);
+            else if (kind == PaydirtKind.Gem)
+                _gemBodies.Add(body);
+        }
+    }
+
+    public void RequestInjection()
+    {
+        for (var i = 0; i < _poolBodies.Count; ++i)
+            _pendingBodies.Enqueue(_poolBodies[i]);
+
+        _poolBodies.Clear();
     }
 }

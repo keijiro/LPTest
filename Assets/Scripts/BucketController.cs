@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 public class BucketController : MonoBehaviour
 {
     [field:SerializeField] Bucket _bucket = null;
+    [field:SerializeField] PaydirtManager _paydirtManager = null;
     [field:SerializeField] UIDocument _ui = null;
     [field:SerializeField] float _openAngle = 60f;
     [field:SerializeField] float _moveSpeed = 180f;
@@ -59,6 +60,8 @@ public class BucketController : MonoBehaviour
             {
                 _state = FlushState.Closing;
                 _targetAngle = 0f;
+                if (_paydirtManager != null)
+                    _paydirtManager.RequestInjection();
             }
         }
 
