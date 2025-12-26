@@ -1,3 +1,4 @@
+/*
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
@@ -43,3 +44,4 @@ public class BombDetonator : MonoBehaviour
         return maxSpeed;
     }
 }
+*/
