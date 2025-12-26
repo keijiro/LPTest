@@ -1,6 +1,5 @@
-using System;
 using UnityEngine;
-using UnityEngine.LowLevelPhysics2D;
+using UnityEngine.UIElements;
 
 public interface IStageInitializable
 {
@@ -9,11 +8,34 @@ public interface IStageInitializable
 
 public class StageManager : MonoBehaviour
 {
+    [SerializeField] UIDocument _ui = null;
+    [SerializeField] PaydirtManager _paydirtManager = null;
+    [SerializeField] BucketController _bucketController = null;
+    [SerializeField] float _bucketCloseWait = 2;
+    [Space]
     [SerializeField] MonoBehaviour[] _initializers = null;
+
+    Button _flushButton;
 
     void Start()
     {
-        foreach (IStageInitializable initializer in _initializers)
-            initializer.InitializeStage(this);
+        var root = _ui.rootVisualElement;
+        _flushButton = root.Q<Button>("flush-button");
+        _flushButton.clicked += OnFlushClicked;
+
+        foreach (var initializer in _initializers)
+            ((IStageInitializable)initializer).InitializeStage(this);
+    }
+
+    async void OnFlushClicked()
+    {
+        ConsoleManager.AddLine("Flush started.");
+
+        _bucketController.Open();
+
+        await Awaitable.WaitForSecondsAsync(_bucketCloseWait);
+
+        _paydirtManager.RequestInjection();
+        _bucketController.Close();
     }
 }

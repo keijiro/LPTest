@@ -300,12 +300,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6011aedbda9434832a431f7259bcf2ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BucketController
-  _bucket: {fileID: 751942955}
-  _paydirtManager: {fileID: 767570500}
-  _ui: {fileID: 231048556}
   _openAngle: 60
   _moveSpeed: 180
-  _holdTime: 1
 --- !u!1 &767570499
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,6 +707,10 @@ MonoBehaviour:
   - {fileID: 296814360}
   - {fileID: 1386073515}
   - {fileID: 767570500}
+  _bucketController: {fileID: 751942956}
+  _paydirtManager: {fileID: 767570500}
+  _ui: {fileID: 231048556}
+  _holdTime: 2
 --- !u!4 &1622039341
 Transform:
   m_ObjectHideFlags: 0
