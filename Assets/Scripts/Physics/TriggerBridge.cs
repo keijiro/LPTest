@@ -1,22 +1,17 @@
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-public class BoxTriggerBridge : MonoBehaviour
+public class TriggerBridge : MonoBehaviour
 {
     #region Editable Fields
 
-    [SerializeField] Vector2 _size = Vector2.one;
     [SerializeField] Categories _detect = Categories.Default;
 
     #endregion
 
     #region Transform Cache and Checker
 
-    (Vector2 position, float rotation, Vector2 scale) _lastXform;
-
-    Vector2 Scale2D => transform.lossyScale;
-
-    Vector2 ScaledSize => Vector2.Scale(_size, Scale2D);
+    (Vector2 position, float rotation) _lastXform;
 
     bool IsPositionChanged
       => _lastXform.position != (Vector2)transform.position;
@@ -28,23 +23,23 @@ public class BoxTriggerBridge : MonoBehaviour
     {
         _lastXform.position = transform.position;
         _lastXform.rotation = transform.eulerAngles.z;
-        _lastXform.scale = Scale2D;
     }
 
     #endregion
 
     #region Physics Body Management
 
+    CompositeShapeBuilder _shapeBuilder;
     PhysicsBody _body;
 
     void CreateBody()
     {
         var bodyDef = PhysicsBodyDefinition.defaultDefinition;
         bodyDef.position = transform.position;
+        bodyDef.rotation = new PhysicsRotate(transform.eulerAngles.z * Mathf.Deg2Rad);
 
         _body = PhysicsWorld.defaultWorld.CreateBody(bodyDef);
 
-        var geometry = PolygonGeometry.CreateBox(ScaledSize, 0);
         var definition = PhysicsShapeDefinition.defaultDefinition;
         definition.isTrigger = true;
         definition.triggerEvents = true;
@@ -53,7 +48,7 @@ public class BoxTriggerBridge : MonoBehaviour
         var mask = new PhysicsMask((int)_detect);
         definition.contactFilter = new PhysicsShape.ContactFilter(category, mask);
 
-        _body.CreateShape(geometry, definition);
+        _shapeBuilder.CreateShapes(_body, definition);
     }
 
     void ApplyTransform()
@@ -67,29 +62,32 @@ public class BoxTriggerBridge : MonoBehaviour
 
     #region MonoBehaviour Implementation
 
+    void Awake()
+      => _shapeBuilder = GetComponent<CompositeShapeBuilder>();
+
     void Start()
     {
+        if (_shapeBuilder == null)
+            return;
+
         CreateBody();
         ApplyTransform();
         CacheTransform();
     }
 
     void OnDestroy()
-      => _body.Destroy();
+    {
+        if (_body.isValid)
+            _body.Destroy();
+    }
 
     void FixedUpdate()
     {
-        if (Scale2D != _lastXform.scale)
+        if (!_body.isValid)
+            return;
+
+        if (IsPositionChanged || IsRotationChanged)
         {
-            // Recreate the body if the scale has changed.
-            _body.Destroy();
-            CreateBody();
-            ApplyTransform();
-            CacheTransform();
-        }
-        else if (IsPositionChanged || IsRotationChanged)
-        {
-            // Update the body's transform if position or rotation has changed.
             ApplyTransform();
             CacheTransform();
         }
