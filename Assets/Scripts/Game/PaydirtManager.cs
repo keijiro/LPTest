@@ -12,7 +12,7 @@ public class PaydirtManager : MonoBehaviour
     [SerializeField] float _density = 1;
     [Space]
     [SerializeField] float _pourRate = 512;
-    [SerializeField] int _targetBodyCount = 1024;
+    [SerializeField] int _bodyCount = 1024;
     [Space]
     [SerializeField] SpoutPositionProvider _spout = null;
     [SerializeField] float _recycleY = -10;
@@ -22,13 +22,7 @@ public class PaydirtManager : MonoBehaviour
     #region Public Methods
 
     public void RequestInjection()
-    {
-        for (var i = 0; i < _poolBodies.Count; ++i)
-            _pendingBodies.Enqueue(_poolBodies[i]);
-
-        _poolBodies.Clear();
-        ConsoleManager.AddLine("Paydirt injection queued.");
-    }
+      => CollectInactiveBodies();
 
     #endregion
 
@@ -42,20 +36,20 @@ public class PaydirtManager : MonoBehaviour
 
     void Update()
     {
-        SpawnDirtBodies();
-        RecycleDirtBodies();
+        UpdateInjection();
+        UpdateRecycling();
     }
 
     #endregion
 
     #region Body Pool Lifecycle
 
-    readonly List<PhysicsBody> _poolBodies = new();
-    readonly List<PhysicsBody> _activeBodies = new();
-    readonly Queue<PhysicsBody> _pendingBodies = new();
+    readonly List<PhysicsBody> _bodyPool = new();
 
     void CreatePool()
     {
+        _bodyPool.Clear();
+
         var bodyDef = PhysicsBodyDefinition.defaultDefinition;
         bodyDef.type = PhysicsBody.BodyType.Dynamic;
 
@@ -68,41 +62,41 @@ public class PaydirtManager : MonoBehaviour
 
         var geometry = new CircleGeometry { radius = _radius };
 
-        for (var i = 0; i < _targetBodyCount; ++i)
+        for (var i = 0; i < _bodyCount; ++i)
         {
             var body = PhysicsWorld.defaultWorld.CreateBody(bodyDef);
             body.enabled = false;
             body.CreateShape(geometry, shapeDef);
-            _poolBodies.Add(body);
+            _bodyPool.Add(body);
         }
     }
 
     void DestroyPool()
     {
-        _poolBodies.ForEach(body => body.Destroy());
-        _activeBodies.ForEach(body => body.Destroy());
-        _pendingBodies.ToList().ForEach(body => body.Destroy());
-
-        _poolBodies.Clear();
-        _pendingBodies.Clear();
-        _activeBodies.Clear();
+        _bodyPool.ForEach(body => body.Destroy());
+        _bodyPool.Clear();
     }
 
     #endregion
 
-    #region Physics Body Lifecycle
+    #region Body Injection
 
-    float _spawnAccumulator;
+    Queue<PhysicsBody> _pendingBodies;
+    float _pourAccumulator;
 
-    void SpawnDirtBodies()
+    void CollectInactiveBodies()
+      => _pendingBodies =
+           new Queue<PhysicsBody>(_bodyPool.Where(body => !body.enabled));
+
+    void UpdateInjection()
     {
-        if (_pendingBodies.Count == 0) return;
+        if (_pendingBodies == null) return;
 
-        _spawnAccumulator += _pourRate * Time.deltaTime;
+        _pourAccumulator += _pourRate * Time.deltaTime;
 
-        while (_spawnAccumulator >= 1 && _pendingBodies.Count > 0)
+        while (_pourAccumulator >= 1 && _pendingBodies.Count > 0)
         {
-            _spawnAccumulator -= 1;
+            _pourAccumulator -= 1;
 
             var xform = new PhysicsTransform(_spout.GetPosition());
 
@@ -111,21 +105,22 @@ public class PaydirtManager : MonoBehaviour
             body.SetAndWriteTransform(xform);
             body.linearVelocity = Vector2.zero;
             body.angularVelocity = 0f;
-
-            _activeBodies.Add(body);
         }
+
+        if (_pendingBodies.Count == 0) _pendingBodies = null;
     }
 
-    void RecycleDirtBodies()
-    {
-        for (var i = _activeBodies.Count - 1; i >= 0; --i)
-        {
-            var body = _activeBodies[i];
-            if (body.transform.position.y >= _recycleY) continue;
+    #endregion
 
+    #region Body Recycling
+
+    void UpdateRecycling()
+    {
+        foreach (var body in _bodyPool)
+        {
+            if (!body.enabled) continue;
+            if (body.transform.position.y >= _recycleY) continue;
             body.enabled = false;
-            _poolBodies.Add(body);
-            _activeBodies.RemoveAt(i);
         }
     }
 
