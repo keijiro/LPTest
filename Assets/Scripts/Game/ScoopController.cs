@@ -4,7 +4,7 @@ using UnityEngine.LowLevelPhysics2D;
 
 public class ScoopController : MonoBehaviour, IStageInitializable
 {
-    [SerializeField] BoxBodyBridge _anchor = null;
+    [SerializeField] StaticBodyBridge _anchor = null;
     [SerializeField] Scoop _scoop = null;
     [SerializeField] Camera _targetCamera = null;
     [field:SerializeField] public float MouseSpringFrequency { get; set; } = 8f;
