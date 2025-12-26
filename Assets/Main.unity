@@ -1031,17 +1031,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1890ff84b0d0447388e01c0ef3fda5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LowLevelBallFill
-  _dirtDefinition: {fileID: 11400000, guid: e2e09bdb979124ddea4eda74b6ac06eb, type: 2}
-  _bombDefinition: {fileID: 11400000, guid: 1a1a9cc9505f5456bb1fe4a037e78092, type: 2}
-  _gemDefinitions:
-  - {fileID: 11400000, guid: 0e7b1d499aa5b4b018f748931abdd8de, type: 2}
-  - {fileID: 11400000, guid: d4d7b3261cdb245eebb98245e85b214c, type: 2}
-  <PourRate>k__BackingField: 200
-  <TargetBodyCount>k__BackingField: 900
-  <BombsPerDirt>k__BackingField: 400
-  <GemsPerDirt>k__BackingField: 200
+  _radius: 0.2
+  _density: 1
+  <PourRate>k__BackingField: 512
+  <TargetBodyCount>k__BackingField: 1024
   <SpoutCenter>k__BackingField: {x: 0, y: 12}
-  <SpoutSize>k__BackingField: {x: 13, y: 1}
+  <SpoutSize>k__BackingField: {x: 10, y: 3}
   <RecycleY>k__BackingField: -10
 --- !u!4 &767570501
 Transform:

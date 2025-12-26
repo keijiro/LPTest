@@ -4,38 +4,19 @@ using UnityEngine.LowLevelPhysics2D;
 
 public class PaydirtManager : MonoBehaviour, IStageInitializable
 {
-    [SerializeField] DirtBodyDefinition _dirtDefinition = null;
-    [SerializeField] DirtBodyDefinition _bombDefinition = null;
-    [SerializeField] DirtBodyDefinition[] _gemDefinitions = null;
-    [field:SerializeField] public float PourRate { get; set; } = 200;
-    [field:SerializeField] public int TargetBodyCount { get; set; } = 900;
-    [field:SerializeField] public int BombsPerDirt { get; set; } = 30;
-    [field:SerializeField] public int GemsPerDirt { get; set; } = 20;
+    [SerializeField] float _radius = 0.2f;
+    [SerializeField] float _density = 1f;
+    [field:SerializeField] public float PourRate { get; set; } = 256;
+    [field:SerializeField] public int TargetBodyCount { get; set; } = 1024;
     [field:SerializeField] public Vector2 SpoutCenter { get; set; } = new(0, 12);
     [field:SerializeField] public Vector2 SpoutSize { get; set; } = new(13, 1);
     [field:SerializeField] public float RecycleY { get; set; } = -10;
 
-    public IReadOnlyList<PhysicsBody> BombBodies => _bombBodies;
-    public IReadOnlyList<PhysicsBody> GemBodies => _gemBodies;
-
-    readonly List<PhysicsBody> _allBodies = new();
     readonly List<PhysicsBody> _poolBodies = new();
     readonly List<PhysicsBody> _activeBodies = new();
-    readonly List<PhysicsBody> _bombBodies = new();
-    readonly List<PhysicsBody> _gemBodies = new();
     readonly Queue<PhysicsBody> _pendingBodies = new();
     PhysicsBodyDefinition _bodyDefinition;
     float _spawnAccumulator;
-    int _dirtSinceBomb;
-    int _dirtSinceGem;
-    int _gemIndex;
-
-    enum PaydirtKind
-    {
-        Dirt,
-        Bomb,
-        Gem
-    }
 
     public void InitializeStage(StageManager stage)
     {
@@ -47,19 +28,13 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
 
     void OnDestroy()
     {
-        for (var i = 0; i < _allBodies.Count; ++i)
-        {
-            var body = _allBodies[i];
-            if (body.isValid)
-                body.Destroy();
-        }
+        DestroyBodies(_poolBodies);
+        DestroyBodies(_activeBodies);
+        DestroyBodies(_pendingBodies);
 
-        _allBodies.Clear();
         _poolBodies.Clear();
         _pendingBodies.Clear();
         _activeBodies.Clear();
-        _bombBodies.Clear();
-        _gemBodies.Clear();
     }
 
     void Update()
@@ -100,44 +75,26 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
         }
     }
 
-    PhysicsBody CreateDirtBody(Vector2 position, DirtBodyDefinition definition, PaydirtKind kind)
-      => definition.CreateBody(PhysicsWorld.defaultWorld, _bodyDefinition, position, GetContactFilter(kind), kind != PaydirtKind.Dirt);
-
-    DirtBodyDefinition ChooseDefinition(out PaydirtKind kind)
+    PhysicsBody CreateDirtBody(Vector2 position)
     {
-        kind = PaydirtKind.Dirt;
+        _bodyDefinition.position = position;
+        var body = PhysicsWorld.defaultWorld.CreateBody(_bodyDefinition);
 
-        if (BombsPerDirt > 0 && _dirtSinceBomb >= BombsPerDirt)
-        {
-            _dirtSinceBomb = 0;
-            kind = PaydirtKind.Bomb;
-            return _bombDefinition;
-        }
+        var shapeDefinition = PhysicsShapeDefinition.defaultDefinition;
+        shapeDefinition.density = _density;
+        shapeDefinition.triggerEvents = false;
+        shapeDefinition.contactFilter = GetContactFilter();
 
-        if (GemsPerDirt > 0 && _gemDefinitions.Length > 0 && _dirtSinceGem >= GemsPerDirt)
-        {
-            _dirtSinceGem = 0;
-            kind = PaydirtKind.Gem;
-            var definition = _gemDefinitions[_gemIndex];
-            _gemIndex = (_gemIndex + 1) % _gemDefinitions.Length;
-            return definition;
-        }
+        var geometry = new CircleGeometry { radius = _radius };
+        body.CreateShape(geometry, shapeDefinition);
 
-        _dirtSinceBomb++;
-        _dirtSinceGem++;
-        return _dirtDefinition;
+        return body;
     }
 
-    PhysicsShape.ContactFilter GetContactFilter(PaydirtKind kind)
+    PhysicsShape.ContactFilter GetContactFilter()
     {
         var contacts = PhysicsMask.All;
         var categories = new PhysicsMask((int)Categories.Dirt);
-
-        if (kind == PaydirtKind.Bomb)
-            categories = new PhysicsMask((int)Categories.Bomb);
-        else if (kind == PaydirtKind.Gem)
-            categories = new PhysicsMask((int)Categories.Gem);
-
         return new PhysicsShape.ContactFilter(categories, contacts);
     }
 
@@ -160,17 +117,14 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
     Vector2 GetSpoutPosition()
     {
         var halfSize = new Vector2(Mathf.Max(0f, SpoutSize.x), Mathf.Max(0f, SpoutSize.y)) * 0.5f;
-        var radius = Mathf.Max(_dirtDefinition.Radius, _bombDefinition.Radius);
-        for (var i = 0; i < _gemDefinitions.Length; ++i)
-            radius = Mathf.Max(radius, _gemDefinitions[i].Radius);
-        var minX = SpoutCenter.x - halfSize.x + radius;
-        var maxX = SpoutCenter.x + halfSize.x - radius;
+        var minX = SpoutCenter.x - halfSize.x + _radius;
+        var maxX = SpoutCenter.x + halfSize.x - _radius;
         if (minX > maxX)
             minX = maxX = SpoutCenter.x;
         var x = Random.Range(minX, maxX);
 
-        var minY = SpoutCenter.y - halfSize.y + radius;
-        var maxY = SpoutCenter.y + halfSize.y - radius;
+        var minY = SpoutCenter.y - halfSize.y + _radius;
+        var maxY = SpoutCenter.y + halfSize.y - _radius;
         if (minY > maxY)
             minY = maxY = SpoutCenter.y;
         var y = Random.Range(minY, maxY);
@@ -180,29 +134,26 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
 
     void CreatePool()
     {
-        _allBodies.Clear();
         _poolBodies.Clear();
         _pendingBodies.Clear();
         _activeBodies.Clear();
-        _bombBodies.Clear();
-        _gemBodies.Clear();
         _spawnAccumulator = 0f;
-        _dirtSinceBomb = 0;
-        _dirtSinceGem = 0;
-        _gemIndex = 0;
 
         for (var i = 0; i < TargetBodyCount; ++i)
         {
-            var definition = ChooseDefinition(out var kind);
-            var body = CreateDirtBody(GetSpoutPosition(), definition, kind);
+            var body = CreateDirtBody(GetSpoutPosition());
             body.enabled = false;
 
-            _allBodies.Add(body);
             _poolBodies.Add(body);
-            if (kind == PaydirtKind.Bomb)
-                _bombBodies.Add(body);
-            else if (kind == PaydirtKind.Gem)
-                _gemBodies.Add(body);
+        }
+    }
+
+    void DestroyBodies(IEnumerable<PhysicsBody> bodies)
+    {
+        foreach (var body in bodies)
+        {
+            if (body.isValid)
+                body.Destroy();
         }
     }
 
