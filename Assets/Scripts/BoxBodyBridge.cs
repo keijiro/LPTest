@@ -10,6 +10,12 @@ public class BoxBodyBridge : MonoBehaviour
 
     #endregion
 
+    #region Public Properties
+
+    public PhysicsBody Body => _body;
+
+    #endregion
+
     #region Transform Cache and Checker
 
     (Vector2 position, float rotation, Vector2 scale) _lastXform;

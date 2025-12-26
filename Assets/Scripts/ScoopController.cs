@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.LowLevelPhysics2D;
+
 public class ScoopController : MonoBehaviour, IStageInitializable
 {
+    [SerializeField] BoxBodyBridge _anchor = null;
     [SerializeField] Scoop _scoop = null;
-    [SerializeField] Bucket _bucket = null;
     [SerializeField] Camera _targetCamera = null;
     [field:SerializeField] public float MouseSpringFrequency { get; set; } = 8f;
     [field:SerializeField] public float MouseSpringDamping { get; set; } = 0.7f;
@@ -79,17 +80,11 @@ public class ScoopController : MonoBehaviour, IStageInitializable
 
     void CreateRimJoint()
     {
-        var bucketHalf = _bucket.BucketSize * 0.5f;
-        var rimLocal = new Vector2(
-            bucketHalf.x - _bucket.WallThickness * 0.5f,
-            bucketHalf.y - _bucket.WallThickness * 0.5f);
-        var bucketBody = _bucket.BucketBody;
-
         var jointDef = PhysicsDistanceJointDefinition.defaultDefinition;
         jointDef.bodyA = _scoop.ScoopBody;
-        jointDef.bodyB = bucketBody;
+        jointDef.bodyB = _anchor.Body;
         jointDef.localAnchorA = new PhysicsTransform(_scoop.HandleTipLocal);
-        jointDef.localAnchorB = new PhysicsTransform(rimLocal);
+        jointDef.localAnchorB = new PhysicsTransform(Vector2.zero);
         jointDef.distance = 0f;
         jointDef.enableSpring = true;
         jointDef.springFrequency = RimSpringFrequency;

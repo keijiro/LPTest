@@ -10,7 +10,8 @@ public class StageManager : MonoBehaviour
 {
     [SerializeField] UIDocument _ui = null;
     [SerializeField] PaydirtManager _paydirtManager = null;
-    [SerializeField] BucketController _bucketController = null;
+    [Space]
+    [SerializeField] Animation _bucketAnimation = null;
     [SerializeField] float _bucketCloseWait = 2;
     [Space]
     [SerializeField] MonoBehaviour[] _initializers = null;
@@ -31,11 +32,11 @@ public class StageManager : MonoBehaviour
     {
         ConsoleManager.AddLine("Flush started.");
 
-        _bucketController.Open();
+        _bucketAnimation.Play("HatchOpen");
 
         await Awaitable.WaitForSecondsAsync(_bucketCloseWait);
 
         _paydirtManager.RequestInjection();
-        _bucketController.Close();
+        _bucketAnimation.Play("HatchClose");
     }
 }
