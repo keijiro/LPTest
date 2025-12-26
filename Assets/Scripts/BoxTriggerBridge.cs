@@ -1,20 +1,12 @@
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-public class BoxBodyBridge : MonoBehaviour
+public class BoxTriggerBridge : MonoBehaviour
 {
     #region Editable Fields
 
     [SerializeField] Vector2 _size = Vector2.one;
-    [SerializeField] bool _isKinematic = false;
-    [SerializeField] Categories _category = Categories.Default;
-    [SerializeField] Categories _ignore = Categories.None;
-
-    #endregion
-
-    #region Public Properties
-
-    public PhysicsBody Body => _body;
+    [SerializeField] Categories _detect = Categories.Default;
 
     #endregion
 
@@ -48,18 +40,17 @@ public class BoxBodyBridge : MonoBehaviour
     void CreateBody()
     {
         var bodyDef = PhysicsBodyDefinition.defaultDefinition;
-        bodyDef.type = _isKinematic ? PhysicsBody.BodyType.Kinematic :
-                                      PhysicsBody.BodyType.Static;
         bodyDef.position = transform.position;
 
         _body = PhysicsWorld.defaultWorld.CreateBody(bodyDef);
 
         var geometry = PolygonGeometry.CreateBox(ScaledSize, 0);
         var definition = PhysicsShapeDefinition.defaultDefinition;
+        definition.isTrigger = true;
+        definition.triggerEvents = true;
 
-        var category = new PhysicsMask((int)_category);
-        var mask = PhysicsMask.All;
-        mask.ResetBit((int)_ignore);
+        var category = new PhysicsMask((int)Categories.Trigger);
+        var mask = new PhysicsMask((int)_detect);
         definition.contactFilter = new PhysicsShape.ContactFilter(category, mask);
 
         _body.CreateShape(geometry, definition);

@@ -101,7 +101,7 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
     }
 
     PhysicsBody CreateDirtBody(Vector2 position, DirtBodyDefinition definition, PaydirtKind kind)
-      => definition.CreateBody(PhysicsWorld.defaultWorld, _bodyDefinition, position, GetContactFilter(kind));
+      => definition.CreateBody(PhysicsWorld.defaultWorld, _bodyDefinition, position, GetContactFilter(kind), kind != PaydirtKind.Dirt);
 
     DirtBodyDefinition ChooseDefinition(out PaydirtKind kind)
     {
@@ -131,17 +131,14 @@ public class PaydirtManager : MonoBehaviour, IStageInitializable
     PhysicsShape.ContactFilter GetContactFilter(PaydirtKind kind)
     {
         var contacts = PhysicsMask.All;
-        var categories = new PhysicsMask(Categories.Dirt);
+        var categories = new PhysicsMask((int)Categories.Dirt);
 
         if (kind == PaydirtKind.Bomb)
-            categories = new PhysicsMask(Categories.Bomb);
+            categories = new PhysicsMask((int)Categories.Bomb);
         else if (kind == PaydirtKind.Gem)
-            categories = new PhysicsMask(Categories.Gem);
+            categories = new PhysicsMask((int)Categories.Gem);
 
-        if (kind == PaydirtKind.Dirt)
-            contacts.ResetBit(Categories.Tray);
-
-        return new PhysicsShape.ContactFilter(categories, contacts, 0);
+        return new PhysicsShape.ContactFilter(categories, contacts);
     }
 
     void ActivateBody(PhysicsBody body)

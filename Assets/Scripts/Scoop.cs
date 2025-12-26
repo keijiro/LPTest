@@ -52,6 +52,8 @@ public class Scoop : MonoBehaviour, IStageInitializable
 
         var shapeDef = PhysicsShapeDefinition.defaultDefinition;
         shapeDef.density = ScoopDensity;
+        shapeDef.contactFilter = new PhysicsShape.ContactFilter
+          (new PhysicsMask((int)Categories.Default), PhysicsMask.All);
 
         _scoopBody.CreateShape(_scoopGeometry.bottom, shapeDef);
         _scoopBody.CreateShape(_scoopGeometry.right, shapeDef);

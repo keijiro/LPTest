@@ -12,7 +12,8 @@ public class DirtBodyDefinition : ScriptableObject
         PhysicsWorld world,
         PhysicsBodyDefinition bodyDefinition,
         Vector2 position,
-        PhysicsShape.ContactFilter contactFilter)
+        PhysicsShape.ContactFilter contactFilter,
+        bool triggerEvents)
     {
         bodyDefinition.position = position;
         var body = world.CreateBody(bodyDefinition);
@@ -20,6 +21,7 @@ public class DirtBodyDefinition : ScriptableObject
         var shapeDefinition = PhysicsShapeDefinition.defaultDefinition;
         shapeDefinition.density = Density;
         shapeDefinition.contactFilter = contactFilter;
+        shapeDefinition.triggerEvents = triggerEvents;
 
         if (Sides < 3)
         {

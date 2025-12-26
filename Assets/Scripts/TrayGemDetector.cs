@@ -1,3 +1,4 @@
+/*
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
@@ -53,3 +54,4 @@ public class TrayGemDetector : MonoBehaviour
         _gemCount = gems.Count;
     }
 }
+*/
