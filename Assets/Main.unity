@@ -783,8 +783,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 225d4032d19984a5fb8bd29b4ccf9a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpoutPositionProvider
-  _center: {x: 0, y: 12}
-  _size: {x: 10, y: 3}
 --- !u!1 &424957181
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,10 +1077,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LowLevelBallFill
   _radius: 0.2
   _density: 1
-  <PourRate>k__BackingField: 512
-  <TargetBodyCount>k__BackingField: 1024
+  _pourRate: 512
+  _targetBodyCount: 1024
   _spout: {fileID: 409404947}
-  <RecycleY>k__BackingField: -10
+  _recycleY: -10
 --- !u!4 &767570501
 Transform:
   m_ObjectHideFlags: 0
@@ -1982,7 +1980,6 @@ MonoBehaviour:
   _initializers:
   - {fileID: 296814360}
   - {fileID: 1386073515}
-  - {fileID: 767570500}
 --- !u!4 &1622039341
 Transform:
   m_ObjectHideFlags: 0

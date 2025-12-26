@@ -18,7 +18,7 @@ public class StageManager : MonoBehaviour
 
     Button _flushButton;
 
-    void Start()
+    async void Start()
     {
         var root = _ui.rootVisualElement;
         _flushButton = root.Q<Button>("flush-button");
@@ -26,6 +26,10 @@ public class StageManager : MonoBehaviour
 
         foreach (var initializer in _initializers)
             ((IStageInitializable)initializer).InitializeStage(this);
+
+        await Awaitable.WaitForSecondsAsync(0.1f);
+
+        _paydirtManager.RequestInjection();
     }
 
     async void OnFlushClicked()
