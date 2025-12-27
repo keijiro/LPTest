@@ -12,6 +12,16 @@ public class StageManager : MonoBehaviour
 
     Button _flushButton;
 
+    void StartInjection()
+    {
+        _paydirtManager.RequestInjection();
+
+        var spawner = GetComponent<ItemSpawner>();
+        spawner.StartSpawnBombs(2, 2).Forget();
+        spawner.StartSpawnGems(0, 3, 2).Forget();
+        spawner.StartSpawnGems(1, 3, 2).Forget();
+    }
+
     async void Start()
     {
         var root = _ui.rootVisualElement;
@@ -20,7 +30,7 @@ public class StageManager : MonoBehaviour
 
         await Awaitable.WaitForSecondsAsync(0.1f);
 
-        _paydirtManager.RequestInjection();
+        StartInjection();
     }
 
     async void OnFlushClicked()
@@ -32,7 +42,7 @@ public class StageManager : MonoBehaviour
 
         await Awaitable.WaitForSecondsAsync(_bucketCloseWait);
 
-        _paydirtManager.RequestInjection();
+        StartInjection();
         _bucketAnimation.Play("HatchClose");
         _scoopController.EndRewind();
     }
