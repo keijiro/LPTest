@@ -323,55 +323,6 @@ MonoBehaviour:
     Radius: 0
     Sides: 0
     Scale: {x: 2, y: 0.5}
---- !u!1 &296814357
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 296814359}
-  - component: {fileID: 296814360}
-  m_Layer: 0
-  m_Name: Scoop
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &296814359
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 296814357}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 964452561}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &296814360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 296814357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4491d3f6287d4514a9dce8b3313f22b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LowLevelScoop
-  <ScoopSize>k__BackingField: {x: 2, y: 1}
-  <WallThickness>k__BackingField: 0.2
-  <HandleLength>k__BackingField: 2
-  <SpawnOffset>k__BackingField: {x: 0, y: 6}
-  <ScoopDensity>k__BackingField: 1
 --- !u!1 &300601548
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,6 +780,37 @@ MonoBehaviour:
     Radius: 0
     Sides: 0
     Scale: {x: 0.5, y: 16}
+--- !u!1 &867241078
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 867241079}
+  m_Layer: 0
+  m_Name: Anchor Tip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &867241079
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 867241078}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.75, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1657676520}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &964452560
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,7 +840,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 296814359}
   - {fileID: 1386073516}
   - {fileID: 767570501}
   - {fileID: 1079328226}
@@ -1028,8 +1009,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db524d9f8a494ee9bd9baaed6253358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LowLevelScoopMouseController
-  _anchor: {fileID: 534811469}
-  _scoop: {fileID: 296814360}
+  _anchorBody: {fileID: 850060230}
+  _anchorPoint: {fileID: 534811468}
+  _scoopBody: {fileID: 1657676518}
+  _mouseAnchor: {fileID: 867241079}
+  _rimAnchor: {fileID: 1652686077}
   _targetCamera: {fileID: 1411473418}
   <MouseSpringFrequency>k__BackingField: 1.3
   <MouseSpringDamping>k__BackingField: 1.2
@@ -1347,9 +1331,6 @@ MonoBehaviour:
   _paydirtManager: {fileID: 767570500}
   _bucketAnimation: {fileID: 247061325}
   _bucketCloseWait: 2
-  _initializers:
-  - {fileID: 296814360}
-  - {fileID: 1386073515}
 --- !u!4 &1622039341
 Transform:
   m_ObjectHideFlags: 0
@@ -1377,6 +1358,118 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 816927e50bd4348f189d7ef6061b92fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ContactManager
+--- !u!1 &1652686076
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1652686077}
+  m_Layer: 0
+  m_Name: Anchor Neck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1652686077
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652686076}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1657676520}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1657676517
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1657676520}
+  - component: {fileID: 1657676519}
+  - component: {fileID: 1657676518}
+  m_Layer: 0
+  m_Name: Scoop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1657676518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657676517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c304d9d761c1a4bd8a64ff59da9d0418, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicBodyBridge
+  _density: 1
+  _category: 1
+  _ignore: 0
+--- !u!114 &1657676519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657676517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae958a19ea3b0456c8f724fc19319ee0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CompositeShapeBuilder
+  _shapes:
+  - Type: 2
+    Center: {x: 0, y: 0}
+    Rotation: 0
+    Radius: 0
+    Sides: 0
+    Scale: {x: 0.3, y: 1.5}
+  - Type: 2
+    Center: {x: -1.42, y: -0.27}
+    Rotation: -11
+    Radius: 0
+    Sides: 0
+    Scale: {x: 3.12, y: 0.3}
+  - Type: 2
+    Center: {x: 1.15, y: 0}
+    Rotation: 0
+    Radius: 0
+    Sides: 0
+    Scale: {x: 2, y: 0.3}
+--- !u!4 &1657676520
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657676517}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1652686077}
+  - {fileID: 867241079}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1676489347
 GameObject:
   m_ObjectHideFlags: 0
@@ -1615,3 +1708,4 @@ SceneRoots:
   - {fileID: 1417267548}
   - {fileID: 1733157984}
   - {fileID: 424957183}
+  - {fileID: 1657676520}

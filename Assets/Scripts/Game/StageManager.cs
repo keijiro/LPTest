@@ -1,11 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public interface IStageInitializable
-{
-    void InitializeStage(StageManager stage);
-}
-
 public class StageManager : MonoBehaviour
 {
     [SerializeField] UIDocument _ui = null;
@@ -13,8 +8,6 @@ public class StageManager : MonoBehaviour
     [Space]
     [SerializeField] Animation _bucketAnimation = null;
     [SerializeField] float _bucketCloseWait = 2;
-    [Space]
-    [SerializeField] MonoBehaviour[] _initializers = null;
 
     Button _flushButton;
 
@@ -23,9 +16,6 @@ public class StageManager : MonoBehaviour
         var root = _ui.rootVisualElement;
         _flushButton = root.Q<Button>("flush-button");
         _flushButton.clicked += OnFlushClicked;
-
-        foreach (var initializer in _initializers)
-            ((IStageInitializable)initializer).InitializeStage(this);
 
         await Awaitable.WaitForSecondsAsync(0.1f);
 
