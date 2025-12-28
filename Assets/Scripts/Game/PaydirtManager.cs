@@ -22,8 +22,8 @@ public class PaydirtManager : MonoBehaviour
 
     #region Public Members
 
-    public ReadOnlySpan<PhysicsBody> BodySpan
-      => _bodyPool;
+    public int BodyCount => _bodyCount;
+    public ReadOnlySpan<PhysicsBody> BodySpan => _bodyPool;
 
     public void RequestInjection()
       => CollectInactiveBodies();
