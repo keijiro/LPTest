@@ -63,8 +63,10 @@ public class StageManager : MonoBehaviour
         {
             await Awaitable.FixedUpdateAsync();
 
-            if (_itemDetector.DetectedItem == null) continue;
-            Debug.Log("Item Detected");
+            if (_itemDetector.DetectedItem == null &&
+                !GameState.IsBombDetonated) continue;
+
+            if (GameState.IsBombDetonated) OnFlushClicked();
 
             _tray.StartExit();
             await Awaitable.WaitForSecondsAsync(1);
@@ -76,6 +78,7 @@ public class StageManager : MonoBehaviour
             if (item != null) Destroy(item.gameObject);
 
             _itemDetector.ResetDetection();
+            GameState.IsBombDetonated = false;
 
             _tray = Instantiate(_trayPrefab);
             await Awaitable.WaitForSecondsAsync(1);

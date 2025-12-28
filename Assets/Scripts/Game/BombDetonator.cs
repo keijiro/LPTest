@@ -1,38 +1,27 @@
-/*
-using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-public class BombDetonator : MonoBehaviour
+public sealed class BombDetonator : MonoBehaviour
 {
-    [SerializeField] PaydirtManager _paydirtManager = null;
-    [field:SerializeField] public float DetonationSpeedThreshold { get; set; } = 1f;
+    #region Editor Fields
 
-    readonly HashSet<PhysicsBody> _detonatedBodies = new();
+    [SerializeField] float _speedThreshold = 1;
+    [SerializeField] float _activationDelay = 3;
 
-    void FixedUpdate()
-    {
-        var bombs = _paydirtManager.BombBodies;
-        for (var i = 0; i < bombs.Count; ++i)
-        {
-            var body = bombs[i];
-            if (!body.isValid || _detonatedBodies.Contains(body))
-                continue;
+    #endregion
 
-            var maxSpeed = GetMaxNormalSpeed(body);
-            if (maxSpeed < DetonationSpeedThreshold)
-                continue;
+    #region Private Members
 
-            _detonatedBodies.Add(body);
-            Debug.Log($"Bomb detonated: normalSpeed={maxSpeed:0.###}", this);
-        }
-    }
+    PhysicsBody _body;
+    float _elapsed;
 
-    float GetMaxNormalSpeed(PhysicsBody body)
+    float GetMaxNormalSpeed()
     {
         var maxSpeed = 0f;
-        using var contacts = body.GetContacts(Allocator.Temp);
+
+        using var contacts = _body.GetContacts(Allocator.Temp);
+
         for (var i = 0; i < contacts.Length; ++i)
         {
             var manifold = contacts[i].manifold;
@@ -43,5 +32,22 @@ public class BombDetonator : MonoBehaviour
 
         return maxSpeed;
     }
+
+    #endregion
+
+    #region MonoBehaviour Implementation
+
+    void Start()
+      => _body = GetComponent<DynamicBodyBridge>().Body;
+
+    void FixedUpdate()
+    {
+        _elapsed += Time.fixedDeltaTime;
+        if (_elapsed < _activationDelay) return;
+
+        if (GetMaxNormalSpeed() > _speedThreshold)
+            GameState.IsBombDetonated = true;
+    }
+
+    #endregion
 }
-*/
