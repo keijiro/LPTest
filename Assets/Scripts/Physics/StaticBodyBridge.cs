@@ -17,25 +17,10 @@ public class StaticBodyBridge : MonoBehaviour
 
     #endregion
 
-    #region Transform Cache and Checker
-
-    (Vector2 position, float rotation) _lastXform;
-
-    bool IsPositionChanged
-      => _lastXform.position != (Vector2)transform.position;
-
-    bool IsRotationChanged
-      => !Mathf.Approximately(Mathf.DeltaAngle(_lastXform.rotation, transform.eulerAngles.z), 0);
-
-    void CacheTransform()
-    {
-        _lastXform.position = transform.position;
-        _lastXform.rotation = transform.eulerAngles.z;
-    }
-
-    #endregion
-
     #region Physics Body Management
+
+    PhysicsRotate RotationFromXform
+      => new PhysicsRotate(transform.eulerAngles.z * Mathf.Deg2Rad);
 
     void CreateBody()
     {
@@ -43,6 +28,7 @@ public class StaticBodyBridge : MonoBehaviour
         bodyDef.type = _isKinematic ? PhysicsBody.BodyType.Kinematic :
                                       PhysicsBody.BodyType.Static;
         bodyDef.position = transform.position;
+        bodyDef.rotation = RotationFromXform;
 
         Body = PhysicsWorld.defaultWorld.CreateBody(bodyDef);
 
@@ -56,13 +42,6 @@ public class StaticBodyBridge : MonoBehaviour
         GetComponent<CompositeShapeBuilder>().CreateShapes(Body, shapeDef);
     }
 
-    void ApplyTransform()
-    {
-        var rot = new PhysicsRotate(transform.eulerAngles.z * Mathf.Deg2Rad);
-        var xform = new PhysicsTransform(transform.position, rot);
-        Body.SetAndWriteTransform(xform);
-    }
-
     #endregion
 
     #region MonoBehaviour Implementation
@@ -70,8 +49,6 @@ public class StaticBodyBridge : MonoBehaviour
     void OnEnable()
     {
         if (!Body.isValid) CreateBody();
-        ApplyTransform();
-        CacheTransform();
     }
 
     void OnDisable()
@@ -81,10 +58,10 @@ public class StaticBodyBridge : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (IsPositionChanged || IsRotationChanged)
+        if (_isKinematic)
         {
-            ApplyTransform();
-            CacheTransform();
+            var xform = new PhysicsTransform(transform.position, RotationFromXform);
+            Body.SetTransformTarget(xform, Time.fixedDeltaTime);
         }
     }
 

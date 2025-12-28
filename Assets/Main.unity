@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 250283309}
   - component: {fileID: 250283311}
   - component: {fileID: 250283310}
+  - component: {fileID: 250283312}
   m_Layer: 0
   m_Name: Tray
   m_TagString: Untagged
@@ -308,6 +309,21 @@ MonoBehaviour:
     Radius: 0
     Sides: 0
     Scale: {x: 2, y: 0.5}
+--- !u!114 &250283312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250283308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16c0aa0fe183e4e68901d163a0b03f70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrayController
+  _inPoint: {x: -12.5, y: -5}
+  _outPoint: {x: -22, y: -5}
+  _moveDuration: 1
 --- !u!1 &409404945
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,7 +433,7 @@ MonoBehaviour:
   _pourRate: 512
   _bodyCount: 1024
   _spout: {fileID: 409404947}
-  _recycleY: -10
+  _recycleY: -12
 --- !u!4 &767570501
 Transform:
   m_ObjectHideFlags: 0
@@ -855,6 +871,8 @@ MonoBehaviour:
   _ui: {fileID: 231048556}
   _paydirtManager: {fileID: 767570500}
   _scoopController: {fileID: 1054568096}
+  _trayController: {fileID: 250283312}
+  _gemDetector: {fileID: 1622039342}
   _bucketAnimation: {fileID: 247061325}
   _bucketCloseWait: 2
 --- !u!4 &1622039341

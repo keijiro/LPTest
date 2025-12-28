@@ -26,7 +26,8 @@ public class DynamicBodyBridge : MonoBehaviour
         bodyDef.position = transform.position;
         bodyDef.rotation = new PhysicsRotate(transform.eulerAngles.z * Mathf.Deg2Rad);
 
-        Body = PhysicsWorld.defaultWorld.CreateBody(bodyDef);
+        var body = Body = PhysicsWorld.defaultWorld.CreateBody(bodyDef);
+        body.userData = new PhysicsUserData { objectValue = gameObject };
 
         var shapeDef = PhysicsShapeDefinition.defaultDefinition;
         shapeDef.density = _density;

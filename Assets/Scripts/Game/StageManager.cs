@@ -3,9 +3,12 @@ using UnityEngine.UIElements;
 
 public class StageManager : MonoBehaviour
 {
+    [Space]
     [SerializeField] UIDocument _ui = null;
     [SerializeField] PaydirtManager _paydirtManager = null;
     [SerializeField] ScoopController _scoopController = null;
+    [SerializeField] TrayController _trayController = null;
+    [SerializeField] GemDetector _gemDetector = null;
     [Space]
     [SerializeField] Animation _bucketAnimation = null;
     [SerializeField] float _bucketCloseWait = 2;
@@ -32,9 +35,15 @@ public class StageManager : MonoBehaviour
         _flushButton = root.Q<Button>("flush-button");
         _flushButton.clicked += OnFlushClicked;
 
+        RunGemDetectionLoop().Forget();
+
         await Awaitable.WaitForSecondsAsync(0.1f);
 
         StartInjection().Forget();
+
+        await Awaitable.WaitForSecondsAsync(1);
+
+        _trayController.MoveIn();
     }
 
     async void OnFlushClicked()
@@ -46,5 +55,24 @@ public class StageManager : MonoBehaviour
 
         StartInjection().Forget();
         _bucketAnimation.Play("HatchClose");
+    }
+
+    async Awaitable RunGemDetectionLoop()
+    {
+        while (true)
+        {
+            await Awaitable.FixedUpdateAsync();
+
+            if (_gemDetector.DetectedGemType.HasValue)
+            {
+                _trayController.MoveOut();
+                await Awaitable.WaitForSecondsAsync(1);
+
+                _gemDetector.ResetDetection();
+
+                _trayController.MoveIn();
+                await Awaitable.WaitForSecondsAsync(1);
+            }
+        }
     }
 }

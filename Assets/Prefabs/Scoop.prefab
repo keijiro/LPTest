@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5535806750932667749}
   - component: {fileID: 3323331102581857924}
   - component: {fileID: 3354985956406938063}
+  - component: {fileID: 4344358071832559283}
   m_Layer: 0
   m_Name: Scoop
   m_TagString: Untagged
@@ -81,6 +82,19 @@ MonoBehaviour:
   _density: 1
   _category: 1
   _ignore: 0
+--- !u!114 &4344358071832559283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2647266654507706872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d3a0a427844142fca7c395090469fb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallDestroyer
+  _destroyY: -15
 --- !u!1 &5411556368243946361
 GameObject:
   m_ObjectHideFlags: 0
