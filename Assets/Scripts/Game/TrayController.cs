@@ -7,6 +7,8 @@ public sealed class TrayController : MonoBehaviour
     [SerializeField] Vector2 _inPoint = Vector2.zero;
     [SerializeField] Vector2 _outPoint = Vector2.one;
     [SerializeField] float _moveDuration = 1;
+    [SerializeField] GameObject [] _candidPrefabs = null;
+    [SerializeField] Transform _candidSpawnPoint = null;
 
     #endregion
 
@@ -16,7 +18,21 @@ public sealed class TrayController : MonoBehaviour
 
     public void MoveOut() => _direction = -1;
 
+    public void SpawnCandid(int index)
+    {
+        _candid = Instantiate(_candidPrefabs[index], _candidSpawnPoint.position, Quaternion.identity);
+        Destroy(_candid.GetComponent<ItemController>());
+    }
+
+    public void DestroyCandid()
+    {
+        Destroy(_candid);
+        _candid = null;
+    }
+
     #endregion
+
+    GameObject _candid;
 
     #region Motion
 

@@ -43,6 +43,7 @@ public class StageManager : MonoBehaviour
 
         await Awaitable.WaitForSecondsAsync(1);
 
+        _trayController.SpawnCandid(0);
         _trayController.MoveIn();
     }
 
@@ -63,16 +64,20 @@ public class StageManager : MonoBehaviour
         {
             await Awaitable.FixedUpdateAsync();
 
-            if (_itemDetector.DetectedItemType.HasValue)
-            {
-                _trayController.MoveOut();
-                await Awaitable.WaitForSecondsAsync(1);
+            if (_itemDetector.DetectedItem == null) continue;
 
-                _itemDetector.ResetDetection();
+            _trayController.MoveOut();
+            await Awaitable.WaitForSecondsAsync(1);
 
-                _trayController.MoveIn();
-                await Awaitable.WaitForSecondsAsync(1);
-            }
+            var item = _itemDetector.DetectedItem;
+            if (item != null) Destroy(item.gameObject);
+
+            _trayController.DestroyCandid();
+            _itemDetector.ResetDetection();
+
+            _trayController.SpawnCandid(Random.Range(0, 2));
+            _trayController.MoveIn();
+            await Awaitable.WaitForSecondsAsync(1);
         }
     }
 }
