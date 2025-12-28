@@ -7,37 +7,42 @@ public class ItemSpawner : MonoBehaviour
     [Space]
     [SerializeField] SpoutPositionProvider _spout = null;
     [Space]
-    [SerializeField] GameObject _bombPrefab = null;
-    [SerializeField] GameObject[] _gemPrefabs = null;
+    [SerializeField] ItemPrefabSet _itemPrefabs = null;
 
     #endregion
 
     #region Public Methods
 
     public async Awaitable StartSpawnBombs(int count, float duration)
-      => await StartSpawn(_bombPrefab, count, duration);
+      => await StartSpawn(count, duration, isBomb: true);
 
-    public async Awaitable StartSpawnGems(int prefabIndex, int count, float duration)
-      => await StartSpawn(_gemPrefabs[prefabIndex], count, duration);
+    public async Awaitable StartSpawnGems(int count, float duration)
+      => await StartSpawn(count, duration, isBomb: false);
 
     #endregion
 
     #region Spawn Implementation
 
-    async Awaitable StartSpawn(GameObject prefab, int count, float duration)
+    async Awaitable StartSpawn(int count, float duration, bool isBomb)
     {
         var step = duration / count;
+
         for (var i = 0; i < count; ++i)
         {
-            var r = Random.value;
-            await Awaitable.WaitForSecondsAsync(step * r);
-            Spawn(prefab);
-            await Awaitable.WaitForSecondsAsync(step * (1 - r));
+            var rand = Random.value;
+            await Awaitable.WaitForSecondsAsync(step * rand);
+
+            var itemType = 
+              isBomb ? ItemType.Bomb
+                     : (ItemType)(1 + (i % GameState.GemVariationCount));
+
+            var prefab = _itemPrefabs.GetItemPrefab(itemType);
+            var go = Instantiate(prefab, _spout.GetPosition(), Quaternion.identity);
+            go.AddComponent<ItemController>().Type = itemType;
+
+            await Awaitable.WaitForSecondsAsync(step * (1 - rand));
         }
     }
-
-    void Spawn(GameObject prefab)
-      => Instantiate(prefab, _spout.GetPosition(), Quaternion.identity);
 
     #endregion
 }

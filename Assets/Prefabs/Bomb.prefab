@@ -102,7 +102,6 @@ GameObject:
   - component: {fileID: 6741112179124802650}
   - component: {fileID: 3585347360033145857}
   - component: {fileID: -2875029564736191071}
-  - component: {fileID: 6493418003033685520}
   m_Layer: 0
   m_Name: Bomb
   m_TagString: Untagged
@@ -173,16 +172,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallDestroyer
   _destroyY: -15
---- !u!114 &6493418003033685520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4986474474163704454}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 607a45305563c410baefa032956b6a21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemController
-  <Type>k__BackingField: 0

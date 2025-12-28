@@ -7,13 +7,14 @@ public class StageManager : MonoBehaviour
     [SerializeField] UIDocument _ui = null;
     [SerializeField] PaydirtManager _paydirtManager = null;
     [SerializeField] ScoopController _scoopController = null;
-    [SerializeField] TrayController _trayController = null;
+    [SerializeField] TrayController _trayPrefab = null;
     [SerializeField] ItemDetector _itemDetector = null;
     [Space]
     [SerializeField] Animation _bucketAnimation = null;
     [SerializeField] float _bucketCloseWait = 2;
 
     Button _flushButton;
+    TrayController _tray;
 
     async Awaitable StartInjection()
     {
@@ -21,8 +22,7 @@ public class StageManager : MonoBehaviour
 
         var spawner = GetComponent<ItemSpawner>();
         spawner.StartSpawnBombs(2, 2).Forget();
-        spawner.StartSpawnGems(0, 3, 2).Forget();
-        spawner.StartSpawnGems(1, 3, 2).Forget();
+        spawner.StartSpawnGems(6, 2).Forget();
 
         await Awaitable.WaitForSecondsAsync(2);
 
@@ -43,8 +43,7 @@ public class StageManager : MonoBehaviour
 
         await Awaitable.WaitForSecondsAsync(1);
 
-        _trayController.SpawnCandid(0);
-        _trayController.MoveIn();
+        _tray = Instantiate(_trayPrefab);
     }
 
     async void OnFlushClicked()
@@ -65,18 +64,20 @@ public class StageManager : MonoBehaviour
             await Awaitable.FixedUpdateAsync();
 
             if (_itemDetector.DetectedItem == null) continue;
+            Debug.Log("Item Detected");
 
-            _trayController.MoveOut();
+            _tray.StartExit();
+            await Awaitable.WaitForSecondsAsync(1);
+            Destroy(_tray.gameObject);
+
             await Awaitable.WaitForSecondsAsync(1);
 
             var item = _itemDetector.DetectedItem;
             if (item != null) Destroy(item.gameObject);
 
-            _trayController.DestroyCandid();
             _itemDetector.ResetDetection();
 
-            _trayController.SpawnCandid(Random.Range(0, 2));
-            _trayController.MoveIn();
+            _tray = Instantiate(_trayPrefab);
             await Awaitable.WaitForSecondsAsync(1);
         }
     }

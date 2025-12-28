@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 1458792259148203737}
   - component: {fileID: 3636307447120248724}
   m_Layer: 0
-  m_Name: Gem2
+  m_Name: Gem3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,7 +142,7 @@ MonoBehaviour:
     Center: {x: 0, y: 0}
     Rotation: 0
     Radius: 0.6
-    Sides: 4
+    Sides: 5
     Scale: {x: 0, y: 0}
 --- !u!114 &1458792259148203737
 MonoBehaviour:

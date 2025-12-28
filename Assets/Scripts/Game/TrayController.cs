@@ -7,43 +7,25 @@ public sealed class TrayController : MonoBehaviour
     [SerializeField] Vector2 _inPoint = Vector2.zero;
     [SerializeField] Vector2 _outPoint = Vector2.one;
     [SerializeField] float _moveDuration = 1;
-    [SerializeField] GameObject [] _candidPrefabs = null;
-    [SerializeField] Transform _candidSpawnPoint = null;
+    [SerializeField] ItemPrefabSet _itemPrefabs = null;
+    [SerializeField] Transform _targetSpawnPoint = null;
 
     #endregion
 
     #region Public Methods
 
-    public void MoveIn() => _direction = 1;
+    public ItemType TargetItemType { get; private set; }
 
-    public void MoveOut() => _direction = -1;
-
-    public void SpawnCandid(int index)
-    {
-        _candid = Instantiate(_candidPrefabs[index], _candidSpawnPoint.position, Quaternion.identity);
-        Destroy(_candid.GetComponent<ItemController>());
-    }
-
-    public void DestroyCandid()
-    {
-        Destroy(_candid);
-        _candid = null;
-    }
+    public void StartExit() => _direction = -1;
 
     #endregion
-
-    GameObject _candid;
 
     #region Motion
 
     float _parameter;
-    float _direction;
+    float _direction = 1;
 
-    #endregion
-
-    #region MonoBehaviour Implementation
-
-    void FixedUpdate()
+    void UpdatePosition()
     {
         var delta = _direction * Time.fixedDeltaTime / _moveDuration;
         _parameter = Mathf.Clamp01(_parameter + delta);
@@ -53,6 +35,20 @@ public sealed class TrayController : MonoBehaviour
 
         transform.position = position;
     }
+
+    #endregion
+
+    #region MonoBehaviour Implementation
+
+    void Start()
+    {
+        TargetItemType = (ItemType)(1 + Random.Range(0, GameState.GemVariationCount));
+        var prefab = _itemPrefabs.GetItemPrefab(TargetItemType);
+        Instantiate(prefab, _targetSpawnPoint.position, Quaternion.identity);
+    }
+
+    void FixedUpdate()
+      => UpdatePosition();
 
     #endregion
 }

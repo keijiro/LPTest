@@ -228,107 +228,6 @@ Animation:
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
---- !u!1 &250283308
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 250283309}
-  - component: {fileID: 250283311}
-  - component: {fileID: 250283310}
-  - component: {fileID: 250283312}
-  m_Layer: 0
-  m_Name: Tray
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &250283309
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250283308}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.5, y: -5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 767769914}
-  - {fileID: 1252999528}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &250283310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250283308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cac5225b8a8448c6b81064837978532, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StaticBodyBridge
-  _isKinematic: 1
-  _category: 1
-  _ignore: 2
---- !u!114 &250283311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250283308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae958a19ea3b0456c8f724fc19319ee0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CompositeShapeBuilder
-  _shapes:
-  - Type: 2
-    Center: {x: 0, y: 0}
-    Rotation: 0
-    Radius: 0
-    Sides: 0
-    Scale: {x: 5, y: 0.5}
-  - Type: 2
-    Center: {x: -3, y: 0.6}
-    Rotation: -45
-    Radius: 0
-    Sides: 0
-    Scale: {x: 2, y: 0.5}
-  - Type: 2
-    Center: {x: 3, y: 0.6}
-    Rotation: 45
-    Radius: 0
-    Sides: 0
-    Scale: {x: 2, y: 0.5}
---- !u!114 &250283312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250283308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16c0aa0fe183e4e68901d163a0b03f70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TrayController
-  _inPoint: {x: -12.5, y: -5}
-  _outPoint: {x: -22, y: -5}
-  _moveDuration: 1
-  _candidPrefabs:
-  - {fileID: 6709701874039455330, guid: 81f46d2a89ba347088508248a58b9cbc, type: 3}
-  - {fileID: 5852331292753208148, guid: 8f3bc1c4ad80347b5b4b657cb7b6841b, type: 3}
-  _candidSpawnPoint: {fileID: 1252999528}
 --- !u!1 &409404945
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,71 +354,6 @@ Transform:
   - {fileID: 409404946}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &767769913
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 767769914}
-  - component: {fileID: 767769916}
-  - component: {fileID: 767769915}
-  m_Layer: 0
-  m_Name: Trigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &767769914
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767769913}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 250283309}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &767769915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767769913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3212122988f64ccb9450b51ae2425b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TriggerBridge
-  _detect: 3
---- !u!114 &767769916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767769913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae958a19ea3b0456c8f724fc19319ee0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CompositeShapeBuilder
-  _shapes:
-  - Type: 2
-    Center: {x: 0, y: 1.5}
-    Rotation: 0
-    Radius: 0
-    Sides: 0
-    Scale: {x: 5.5, y: 3}
 --- !u!1 &850060228
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,37 +479,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1252999527
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1252999528}
-  m_Layer: 0
-  m_Name: Candid Spawn
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1252999528
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1252999527}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 250283309}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1411473415
 GameObject:
@@ -907,7 +710,7 @@ MonoBehaviour:
   _ui: {fileID: 231048556}
   _paydirtManager: {fileID: 767570500}
   _scoopController: {fileID: 1054568096}
-  _trayController: {fileID: 250283312}
+  _trayPrefab: {fileID: 6018755574100643915, guid: b4cf7e6511a1a4c22a1dd2765d633bd7, type: 3}
   _itemDetector: {fileID: 1622039342}
   _bucketAnimation: {fileID: 247061325}
   _bucketCloseWait: 2
@@ -951,10 +754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemSpawner
   _spout: {fileID: 409404947}
-  _bombPrefab: {fileID: 4986474474163704454, guid: d4120b3de6f9f48418ee4afa66cb60c7, type: 3}
-  _gemPrefabs:
-  - {fileID: 6709701874039455330, guid: 81f46d2a89ba347088508248a58b9cbc, type: 3}
-  - {fileID: 5852331292753208148, guid: 8f3bc1c4ad80347b5b4b657cb7b6841b, type: 3}
+  _itemPrefabs: {fileID: 11400000, guid: de0a5b99f00b94a7c8085c8b7f0e9039, type: 2}
 --- !u!114 &1622039344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1045,4 +845,3 @@ SceneRoots:
   - {fileID: 1054568097}
   - {fileID: 767570501}
   - {fileID: 247061324}
-  - {fileID: 250283309}
