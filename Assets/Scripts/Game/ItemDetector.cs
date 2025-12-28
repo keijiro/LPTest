@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
 
-public sealed class GemDetector : MonoBehaviour
+public sealed class ItemDetector : MonoBehaviour
 {
-    public int? DetectedGemType { get; private set; }
+    public ItemType? DetectedItemType { get; private set; }
 
     public void ResetDetection()
-      => DetectedGemType = null;
+      => DetectedItemType = null;
 
     void OnEnable()
       => PhysicsEvents.PostSimulate += OnPostSimulate;
@@ -16,17 +16,17 @@ public sealed class GemDetector : MonoBehaviour
 
     void OnPostSimulate(PhysicsWorld world, float timeStep)
     {
-        if (DetectedGemType.HasValue) return;
+        if (DetectedItemType.HasValue) return;
 
         foreach (var e in world.triggerBeginEvents)
         {
             var go = e.visitorShape.body.userData.objectValue as GameObject;
             if (go == null) continue;
 
-            var gem = go.GetComponent<GemController>();
-            if (gem == null) continue;
+            var item = go.GetComponent<ItemController>();
+            if (item == null) continue;
 
-            DetectedGemType = gem.GemType;
+            DetectedItemType = item.Type;
             break;
         }
     }

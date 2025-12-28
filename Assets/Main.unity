@@ -872,7 +872,7 @@ MonoBehaviour:
   _paydirtManager: {fileID: 767570500}
   _scoopController: {fileID: 1054568096}
   _trayController: {fileID: 250283312}
-  _gemDetector: {fileID: 1622039342}
+  _itemDetector: {fileID: 1622039342}
   _bucketAnimation: {fileID: 247061325}
   _bucketCloseWait: 2
 --- !u!4 &1622039341

@@ -8,7 +8,7 @@ public class StageManager : MonoBehaviour
     [SerializeField] PaydirtManager _paydirtManager = null;
     [SerializeField] ScoopController _scoopController = null;
     [SerializeField] TrayController _trayController = null;
-    [SerializeField] GemDetector _gemDetector = null;
+    [SerializeField] ItemDetector _itemDetector = null;
     [Space]
     [SerializeField] Animation _bucketAnimation = null;
     [SerializeField] float _bucketCloseWait = 2;
@@ -35,7 +35,7 @@ public class StageManager : MonoBehaviour
         _flushButton = root.Q<Button>("flush-button");
         _flushButton.clicked += OnFlushClicked;
 
-        RunGemDetectionLoop().Forget();
+        RunItemDetectionLoop().Forget();
 
         await Awaitable.WaitForSecondsAsync(0.1f);
 
@@ -57,18 +57,18 @@ public class StageManager : MonoBehaviour
         _bucketAnimation.Play("HatchClose");
     }
 
-    async Awaitable RunGemDetectionLoop()
+    async Awaitable RunItemDetectionLoop()
     {
         while (true)
         {
             await Awaitable.FixedUpdateAsync();
 
-            if (_gemDetector.DetectedGemType.HasValue)
+            if (_itemDetector.DetectedItemType.HasValue)
             {
                 _trayController.MoveOut();
                 await Awaitable.WaitForSecondsAsync(1);
 
-                _gemDetector.ResetDetection();
+                _itemDetector.ResetDetection();
 
                 _trayController.MoveIn();
                 await Awaitable.WaitForSecondsAsync(1);
