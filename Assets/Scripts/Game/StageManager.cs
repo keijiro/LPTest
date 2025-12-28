@@ -3,61 +3,69 @@ using UnityEngine.UIElements;
 
 public class StageManager : MonoBehaviour
 {
+    #region Editable Fields
+
     [Space]
     [SerializeField] UIDocument _ui = null;
     [SerializeField] PaydirtManager _paydirtManager = null;
     [SerializeField] ScoopController _scoopController = null;
-    [SerializeField] TrayController _trayPrefab = null;
-    [SerializeField] ItemDetector _itemDetector = null;
-    [Space]
     [SerializeField] Animation _bucketAnimation = null;
-    [SerializeField] float _bucketCloseWait = 2;
+    [Space]
+    [SerializeField] TrayController _trayPrefab = null;
 
+    #endregion
+
+    #region Private Fields
+
+    ItemDetector _itemDetector;
+    ItemSpawner _itemSpawner;
     Button _flushButton;
     TrayController _tray;
 
-    async Awaitable StartInjection()
+    #endregion
+
+    #region Game Action Methods (async)
+
+    async Awaitable InitializeStageAsync()
     {
-        _paydirtManager.RequestInjection();
-
-        var spawner = GetComponent<ItemSpawner>();
-        spawner.StartSpawnBombs(2, 2).Forget();
-        spawner.StartSpawnGems(6, 2).Forget();
-
-        await Awaitable.WaitForSecondsAsync(2);
-
-        _scoopController.SpawnScoopInstance();
-    }
-
-    async void Start()
-    {
-        var root = _ui.rootVisualElement;
-        _flushButton = root.Q<Button>("flush-button");
-        _flushButton.clicked += OnFlushClicked;
-
-        RunItemDetectionLoop().Forget();
-
         await Awaitable.WaitForSecondsAsync(0.1f);
 
-        StartInjection().Forget();
+        InjectContentsAsync().Forget();
 
         await Awaitable.WaitForSecondsAsync(1);
 
         _tray = Instantiate(_trayPrefab);
     }
 
-    async void OnFlushClicked()
+    async Awaitable InjectContentsAsync()
     {
+        _paydirtManager.RequestInjection();
+        _itemSpawner.StartSpawnBombs(2, 2).Forget();
+        _itemSpawner.StartSpawnGems(6, 2).Forget();
+
+        await Awaitable.WaitForSecondsAsync(2);
+
+        _scoopController.SpawnScoopInstance();
+    }
+
+    async Awaitable FlushContentsAsync()
+    {
+        _flushButton.SetEnabled(false);
+
         _bucketAnimation.Play("HatchOpen");
         _scoopController.ThrowScoopInstance();
 
-        await Awaitable.WaitForSecondsAsync(_bucketCloseWait);
+        await Awaitable.WaitForSecondsAsync(2);
 
-        StartInjection().Forget();
+        InjectContentsAsync().Forget();
         _bucketAnimation.Play("HatchClose");
+
+        await Awaitable.WaitForSecondsAsync(3);
+
+        _flushButton.SetEnabled(true);
     }
 
-    async Awaitable RunItemDetectionLoop()
+    async Awaitable RunItemDetectionLoopAsync()
     {
         while (true)
         {
@@ -66,7 +74,8 @@ public class StageManager : MonoBehaviour
             if (_itemDetector.DetectedItem == null &&
                 !GameState.IsBombDetonated) continue;
 
-            if (GameState.IsBombDetonated) OnFlushClicked();
+            if (GameState.IsBombDetonated)
+                FlushContentsAsync().Forget();
 
             _tray.StartExit();
             await Awaitable.WaitForSecondsAsync(1);
@@ -81,7 +90,32 @@ public class StageManager : MonoBehaviour
             GameState.IsBombDetonated = false;
 
             _tray = Instantiate(_trayPrefab);
-            await Awaitable.WaitForSecondsAsync(1);
         }
     }
+
+    #endregion
+
+    #region UI Controllers
+
+    void OnFlushClicked()
+      => FlushContentsAsync().Forget();
+
+    #endregion
+
+    #region MonoBehaviour Implementation
+
+    void Start()
+    {
+        _itemDetector = GetComponent<ItemDetector>();
+        _itemSpawner = GetComponent<ItemSpawner>();
+
+        var root = _ui.rootVisualElement;
+        _flushButton = root.Q<Button>("flush-button");
+        _flushButton.clicked += OnFlushClicked;
+
+        InitializeStageAsync().Forget();
+        RunItemDetectionLoopAsync().Forget();
+    }
+
+    #endregion
 }
