@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,7 +20,10 @@ public class PaydirtManager : MonoBehaviour
 
     #endregion
 
-    #region Public Methods
+    #region Public Members
+
+    public ReadOnlySpan<PhysicsBody> BodySpan
+      => _bodyPool;
 
     public void RequestInjection()
       => CollectInactiveBodies();
@@ -44,11 +48,11 @@ public class PaydirtManager : MonoBehaviour
 
     #region Body Pool Lifecycle
 
-    readonly List<PhysicsBody> _bodyPool = new();
+    PhysicsBody[] _bodyPool;
 
     void CreatePool()
     {
-        _bodyPool.Clear();
+        _bodyPool = new PhysicsBody[_bodyCount];
 
         var bodyDef = PhysicsBodyDefinition.defaultDefinition;
         bodyDef.type = PhysicsBody.BodyType.Dynamic;
@@ -67,14 +71,14 @@ public class PaydirtManager : MonoBehaviour
             var body = PhysicsWorld.defaultWorld.CreateBody(bodyDef);
             body.enabled = false;
             body.CreateShape(geometry, shapeDef);
-            _bodyPool.Add(body);
+            _bodyPool[i] = body;
         }
     }
 
     void DestroyPool()
     {
-        _bodyPool.ForEach(body => body.Destroy());
-        _bodyPool.Clear();
+        foreach (var body in _bodyPool) body.Destroy();
+        _bodyPool = null;
     }
 
     #endregion
