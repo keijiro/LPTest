@@ -1,0 +1,24 @@
+:root {
+}
+
+.unity-text-element {
+    -unity-font-definition: url("project://database/Assets/UI/Jersey_10/Jersey10-Regular.ttf?fileID=12800000&guid=831de0b279a75476282feaee42b2e3e7&type=3#Jersey10-Regular");
+    font-size: 24px;
+    color: rgb(67, 67, 67);
+}
+
+.unity-button {
+    background-color: rgb(195, 182, 52);
+    border-left-color: rgb(159, 98, 77);
+    border-right-color: rgb(159, 98, 77);
+    border-top-color: rgb(159, 98, 77);
+    border-bottom-color: rgb(159, 98, 77);
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    border-bottom-right-radius: 9px;
+    border-bottom-left-radius: 9px;
+}
