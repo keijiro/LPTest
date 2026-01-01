@@ -465,36 +465,13 @@ GameObject:
   - component: {fileID: 412705077}
   - component: {fileID: 412705076}
   - component: {fileID: 412705075}
-  - component: {fileID: 412705074}
   m_Layer: 0
-  m_Name: Quad
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &412705074
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 412705073}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &412705075
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1168,12 +1145,12 @@ MonoBehaviour:
   <Color11>k__BackingField: {r: 1, g: 0.9254902, b: 0.15686275, a: 1}
   <Color12>k__BackingField: {r: 0.003921569, g: 0.89411765, b: 0.21568628, a: 1}
   <Color13>k__BackingField: {r: 0.16078432, g: 0.6784314, b: 1, a: 1}
-  <Color14>k__BackingField: {r: 0.5137255, g: 0.46666667, b: 0.6117647, a: 1}
+  <Color14>k__BackingField: {r: 0.41037738, g: 0.86573124, b: 1, a: 1}
   <Color15>k__BackingField: {r: 1, g: 0.46666667, b: 0.65882355, a: 1}
   <Color16>k__BackingField: {r: 1, g: 0.8, b: 0.6666667, a: 1}
   <Extended>k__BackingField: 1
   <Dithering>k__BackingField: 0.08
-  <Downsampling>k__BackingField: 5
+  <Downsampling>k__BackingField: 6
   <Opacity>k__BackingField: 1
   _shader: {fileID: 4800000, guid: 11e94cd5c3fe34771a02e77528668f69, type: 3}
 --- !u!1 &1472358975
