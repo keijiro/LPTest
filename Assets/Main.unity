@@ -311,6 +311,7 @@ GameObject:
   m_Component:
   - component: {fileID: 231048557}
   - component: {fileID: 231048556}
+  - component: {fileID: 231048558}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -356,6 +357,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &231048558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231048555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab52017d9cda34e6b863a3ef43b90e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BalloonController
+  _ui: {fileID: 231048556}
+  _defaultMessage: 'ONE MORE
+
+    LIKE THIS
+
+    PLEASE!'
+  _goodMessages:
+  - THAT'S IT!<br>THANKS!
+  - PERFECT!<br>THANKS!
+  - YAY!<br>THANKS!
+  - EXACTLY!<br>THANKS!
+  - YOU GOT IT!<br>THANKS!
+  - AWESOME!<br>THANKS!
+  _badMessages:
+  - WELL...<br>THAT'S<br>SOMETHING
+  - HMM...
+  - THAT'S<br>CLOSE...
+  - UH...<br>NOT BAD
+  - THANKS<br>BUT...
+  - NOT QUITE...
+  - I'LL TAKE<br>IT...
 --- !u!1 &247061323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1361,6 +1395,7 @@ MonoBehaviour:
   _ui: {fileID: 231048556}
   _paydirtManager: {fileID: 767570500}
   _scoopController: {fileID: 1054568096}
+  _balloonController: {fileID: 231048558}
   _bucketAnimation: {fileID: 247061325}
   _trayPrefab: {fileID: 6018755574100643915, guid: b4cf7e6511a1a4c22a1dd2765d633bd7, type: 3}
 --- !u!4 &1622039341

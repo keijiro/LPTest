@@ -9,6 +9,7 @@ public class StageManager : MonoBehaviour
     [SerializeField] UIDocument _ui = null;
     [SerializeField] PaydirtManager _paydirtManager = null;
     [SerializeField] ScoopController _scoopController = null;
+    [SerializeField] BalloonController _balloonController = null;
     [SerializeField] Animation _bucketAnimation = null;
     [Space]
     [SerializeField] TrayController _trayPrefab = null;
@@ -69,14 +70,27 @@ public class StageManager : MonoBehaviour
     {
         while (true)
         {
-            await Awaitable.FixedUpdateAsync();
+            await Awaitable.WaitForSecondsAsync(2);
+            _balloonController.ShowDefaultMessage();
 
-            if (_itemDetector.DetectedItem == null &&
-                !GameState.IsBombDetonated) continue;
+            while (_itemDetector.DetectedItem == null &&
+                   !GameState.IsBombDetonated)
+                await Awaitable.FixedUpdateAsync();
 
             if (GameState.IsBombDetonated)
                 FlushContentsAsync().Forget();
 
+            var success = _itemDetector.DetectedItem != null &&
+                          _itemDetector.DetectedItem.Type == _tray.TargetItemType;
+
+            await Awaitable.WaitForSecondsAsync(0.15f);
+
+            if (success)
+                _balloonController.ShowGoodMessage();
+            else
+                _balloonController.ShowBadMessage();
+
+            await Awaitable.WaitForSecondsAsync(0.5f);
             _tray.StartExit();
             await Awaitable.WaitForSecondsAsync(1);
             Destroy(_tray.gameObject);
